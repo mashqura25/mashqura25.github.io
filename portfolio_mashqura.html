@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Khadija Parveen Mashqura — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink: #15171c;
+    --ink-2: #1b1e25;
+    --page-bg: #1e2129;
+    --marigold: #e2a63c;
+    --marigold-deep: #c8891f;
+    --maroon: #7c2d3b;
+    --text: #f2efe6;
+    --text-muted: #9ba1ad;
+    --border: #2a2d36;
+    --spine-w: 64px;
+    --serif: 'Fraunces', Georgia, serif;
+    --sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+
+  body{
+    margin:0;
+    font-family: var(--sans);
+    background: var(--ink);
+    color: var(--text);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body::before{
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    opacity: 0.05;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .ruled{
+    position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background-image: repeating-linear-gradient(to bottom, transparent 0px, transparent 41px, rgba(242,239,230,0.04) 42px);
+  }
+
+  .watermark{
+    position: fixed; bottom: -6%; left: calc(var(--spine-w) + 2%);
+    font-family: var(--serif); font-style: italic; font-weight: 700;
+    font-size: 26vw; line-height: 1; color: rgba(226,166,60,0.035);
+    z-index: -1; pointer-events: none; user-select: none;
+  }
+
+  .line-art{ position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+
+  a{ color: inherit; text-decoration: none; }
+  img{ max-width: 100%; display: block; }
+
+  /* ---------- Spine navigation ---------- */
+  .spine{
+    position: fixed; left: 0; top: 0; bottom: 0; width: var(--spine-w);
+    background: var(--ink-2); border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+    padding: 28px 0; z-index: 200;
+  }
+
+  .spine-mark{
+    writing-mode: vertical-rl; font-family: var(--serif); font-style: italic; font-weight: 600;
+    font-size: 1rem; color: var(--marigold); letter-spacing: 0.02em; background: none; border: none; cursor: pointer;
+  }
+
+  .spine-links{ list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 26px; writing-mode: vertical-rl; }
+
+  .spine-links button{
+    font-family: var(--sans); font-size: 0.78rem; color: var(--text-muted); letter-spacing: 0.02em;
+    background: none; border: none; cursor: pointer; padding: 0;
+    transition: color 0.15s ease; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .spine-links button:hover{ color: var(--marigold); }
+  .spine-links button.active{ color: var(--marigold); }
+  .spine-links .num{ font-family: var(--serif); font-style: italic; font-weight: 600; color: var(--maroon); font-size: 0.78rem; }
+
+  .spine-toggle{
+    display: none; writing-mode: horizontal-tb; background: none; border: 1px solid var(--border);
+    color: var(--text-muted); border-radius: 6px; padding: 6px 8px; font-size: 0.85rem;
+  }
+
+  /* ---------- Book frame ---------- */
+  main{ margin-left: var(--spine-w); padding: 60px 24px 120px; min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; }
+
+  .page-frame{
+    position: relative;
+    width: 100%;
+    max-width: 820px;
+    background: var(--page-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    box-shadow:
+      8px 8px 0 -1px var(--ink),
+      8px 8px 0 0 var(--border),
+      16px 16px 0 -1px var(--ink),
+      16px 16px 0 0 var(--border),
+      0 30px 60px -24px rgba(0,0,0,0.6);
+  }
+
+  .book-page{ display: none; padding: 56px 56px 40px; }
+  .book-page.active{ display: block; animation: leafIn 0.4s ease; }
+
+  @keyframes leafIn{
+    from{ opacity: 0; transform: translateX(10px); }
+    to{ opacity: 1; transform: translateX(0); }
+  }
+
+  .page-folio{
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-family: var(--serif); font-style: italic; color: var(--text-muted);
+    font-size: 0.82rem; margin-bottom: 40px; padding-bottom: 14px; border-bottom: 1px solid var(--border);
+  }
+
+  /* ---------- Hero (page 1) ---------- */
+  .hero-row{ display: grid; grid-template-columns: 1fr 220px; gap: 36px; align-items: center; margin-bottom: 8px; }
+
+  .hero-name{
+    font-family: var(--serif); font-style: italic; font-weight: 600;
+    font-size: clamp(2rem, 4.4vw, 2.9rem); line-height: 1.1; margin: 0 0 20px; max-width: 12ch;
+  }
+
+  .hero-quote{
+    font-family: var(--serif); font-style: italic; font-size: 1.05rem; color: var(--text-muted);
+    max-width: 40ch; margin: 0 0 28px; padding-left: 18px; border-left: 3px solid var(--marigold);
+  }
+
+  .hero-photo{ width: 100%; max-width: 220px; height: auto; }
+
+  .btn-row{ display:flex; gap: 14px; flex-wrap: wrap; }
+
+  .btn{
+    display:inline-block; padding: 11px 24px; border-radius: 999px; font-weight: 600; font-size: 0.9rem;
+    font-family: var(--sans); border: 1px solid transparent; cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+  .btn-primary{ background: var(--marigold); color: var(--ink); }
+  .btn-primary:hover{ background: var(--marigold-deep); transform: translateY(-1px); }
+  .btn-secondary{ border-color: var(--border); color: var(--text); }
+  .btn-secondary:hover{ border-color: var(--maroon); color: var(--maroon); }
+
+  /* ---------- Section headers ---------- */
+  .section-block{ padding-top: 46px; margin-top: 46px; border-top: 1px solid var(--border); }
+  .section-block:first-child{ padding-top: 0; margin-top: 0; border-top: none; }
+
+  .section-label{ display:flex; align-items: baseline; gap: 12px; margin-bottom: 8px; }
+  .section-num{ font-family: var(--serif); font-style: italic; font-weight: 600; color: var(--maroon); font-size: 0.98rem; }
+  .section-title{ font-family: var(--serif); font-style: italic; font-weight: 600; font-size: 1.6rem; margin: 0; }
+  .section-sub{ color: var(--text-muted); margin: 6px 0 0; max-width: 58ch; font-size: 0.94rem; }
+
+  /* ---------- About ---------- */
+  .about-body{ margin-top: 30px; display: grid; grid-template-columns: 1.4fr 1fr; gap: 36px; align-items: start; }
+  .about-body p{ margin: 0 0 14px; color: var(--text-muted); font-size: 0.95rem; max-width: 56ch; }
+  .about-body p:first-of-type::first-letter{
+    font-family: var(--serif); font-style: italic; font-weight: 700; font-size: 2.9rem;
+    line-height: 0.75; float: left; margin: 6px 8px 0 0; color: var(--marigold);
+  }
+
+  .info-note{ border-left: 2px solid var(--border); padding-left: 18px; }
+  .info-note dt{ font-size: 0.7rem; color: var(--text-muted); margin-bottom: 3px; }
+  .info-note dd{ margin: 0 0 16px; font-size: 0.9rem; word-break: break-word; }
+  .info-note dd:last-child{ margin-bottom: 0; }
+  .info-note dd a:hover{ color: var(--marigold); }
+
+  /* ---------- Timeline ---------- */
+  .timeline{ position: relative; padding-left: 26px; margin-top: 30px; }
+  .timeline::before{ content:""; position:absolute; left:5px; top:6px; bottom:6px; width:1px; background: var(--border); }
+  .timeline-item{ position: relative; padding-bottom: 28px; }
+  .timeline-item:last-child{ padding-bottom: 0; }
+  .timeline-item::before{
+    content:""; position:absolute; left:-26px; top:5px; width:10px; height:10px; border-radius:50%;
+    background: var(--dot); box-shadow: 0 0 0 4px var(--page-bg);
+  }
+  .timeline-item:nth-child(odd){ --dot: var(--marigold); }
+  .timeline-item:nth-child(even){ --dot: var(--maroon); }
+  .timeline-date{ font-size: 0.78rem; color: var(--text-muted); margin: 0 0 3px; }
+  .timeline-role{ font-family: var(--serif); font-style: italic; font-weight: 600; font-size: 1.05rem; margin: 0 0 2px; }
+  .timeline-org{ color: var(--text-muted); font-size: 0.88rem; margin: 0 0 6px; }
+  .timeline-desc{ color: var(--text-muted); font-size: 0.9rem; margin: 0; max-width: 56ch; }
+  .timeline-badge{
+    display:inline-block; margin-top: 8px; font-size: 0.72rem; font-weight: 600; padding: 3px 11px;
+    border-radius: 999px; background: color-mix(in srgb, var(--dot) 18%, transparent); color: var(--dot);
+  }
+
+  /* ---------- Skills glossary ---------- */
+  .glossary{ display: grid; grid-template-columns: 1fr 1fr; gap: 30px 36px; margin-top: 30px; }
+  .glossary-group h3{ font-family: var(--serif); font-style: italic; font-weight: 600; font-size: 0.98rem; margin: 0 0 14px; }
+  .gloss-item{ display: flex; gap: 12px; margin-bottom: 14px; align-items: baseline; }
+  .gloss-letter{ font-family: var(--serif); font-style: italic; font-weight: 700; font-size: 1.35rem; width: 22px; flex-shrink: 0; color: var(--marigold); }
+  .gloss-item:nth-child(even) .gloss-letter{ color: var(--maroon); }
+  .gloss-text b{ font-weight: 600; color: var(--text); display:block; font-size: 0.92rem; }
+  .gloss-text span{ display: block; color: var(--text-muted); font-size: 0.82rem; margin-top: 2px; }
+
+  /* ---------- References ---------- */
+  .ref-list{ display: flex; flex-direction: column; gap: 24px; margin-top: 30px; }
+  .ref-item{ border-left: 2px solid var(--ref-accent); padding-left: 18px; }
+  .ref-item:nth-child(odd){ --ref-accent: var(--marigold); }
+  .ref-item:nth-child(even){ --ref-accent: var(--maroon); }
+  .ref-name{ font-family: var(--serif); font-style: italic; font-weight: 600; font-size: 1.02rem; margin: 0 0 2px; }
+  .ref-role{ color: var(--ref-accent); font-size: 0.84rem; font-weight: 600; margin: 0 0 2px; }
+  .ref-org{ color: var(--text-muted); font-size: 0.84rem; margin: 0 0 8px; }
+  .ref-contact{ font-size: 0.82rem; color: var(--text-muted); margin: 2px 0; }
+
+  /* ---------- Contact ---------- */
+  .contact-lead{ font-family: var(--serif); font-style: italic; font-size: 1.2rem; margin: 18px 0 26px; max-width: 38ch; }
+
+  /* ---------- Book controls (turn page) ---------- */
+  .book-controls{
+    position: fixed; left: calc(50% + var(--spine-w)/2); bottom: 26px; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 18px;
+    background: var(--ink-2); border: 1px solid var(--border); border-radius: 999px;
+    padding: 8px 10px; box-shadow: 0 14px 30px -14px rgba(0,0,0,0.6); z-index: 150;
+  }
+  .book-controls button{
+    width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border); background: var(--ink);
+    color: var(--text); font-size: 1rem; cursor: pointer; display:flex; align-items:center; justify-content:center;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  .book-controls button:hover{ border-color: var(--marigold); color: var(--marigold); }
+  .book-controls button:disabled{ opacity: 0.3; cursor: default; }
+  .book-controls button:disabled:hover{ border-color: var(--border); color: var(--text); }
+
+  .page-indicator{ font-family: var(--serif); font-style: italic; font-size: 0.88rem; color: var(--text-muted); min-width: 64px; text-align: center; }
+
+  /* ---------- Leaf nav links inside page ---------- */
+  .leaf-nav{ display: flex; justify-content: space-between; align-items: center; margin-top: 46px; padding-top: 20px; border-top: 1px solid var(--border); }
+  .leaf-nav button{
+    background: none; border: none; cursor: pointer; font-family: var(--serif); font-style: italic;
+    font-weight: 600; font-size: 0.95rem; color: var(--text-muted); transition: color 0.15s ease;
+  }
+  .leaf-nav button:hover{ color: var(--marigold); }
+  .leaf-nav .dir{ display:block; font-family: var(--sans); font-style: normal; font-weight: 500; font-size: 0.68rem; color: var(--text-muted); opacity: 0.7; margin-bottom: 2px; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 860px){
+    .spine{
+      position: sticky; left: auto; top: 0; bottom: auto; width: auto; height: auto;
+      flex-direction: row; align-items: center; justify-content: space-between;
+      padding: 12px 18px; border-right: none; border-bottom: 1px solid var(--border);
+    }
+    .spine-mark{ writing-mode: horizontal-tb; }
+    .spine-links{
+      writing-mode: horizontal-tb; flex-direction: row; gap: 16px; overflow-x: auto; display: none;
+      position: absolute; top: 100%; left: 0; right: 0; background: var(--ink-2); padding: 16px 18px; border-bottom: 1px solid var(--border);
+    }
+    .spine-links.open{ display: flex; flex-wrap: wrap; }
+    .spine-toggle{ display: inline-block; }
+    main{ margin-left: 0; padding: 28px 16px 110px; }
+    .book-controls{ left: 50%; }
+    .book-page{ padding: 34px 24px 28px; }
+    .hero-row{ grid-template-columns: 1fr; }
+    .hero-photo{ max-width: 180px; order: -1; margin: 0 auto 8px; }
+    .about-body{ grid-template-columns: 1fr; }
+    .glossary{ grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce){ *{ scroll-behavior:auto !important; transition:none !important; animation:none !important; } }
+</style>
+</head>
+<body>
+
+<div class="ruled"></div>
+<div class="watermark">K</div>
+<svg class="line-art" viewBox="0 0 1440 1600" preserveAspectRatio="xMidYMin slice" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="1310" cy="120" r="120" fill="none" stroke="#e2a63c" stroke-opacity="0.14" stroke-width="1"/>
+  <circle cx="1310" cy="120" r="84" fill="none" stroke="#e2a63c" stroke-opacity="0.10" stroke-width="1"/>
+  <circle cx="1310" cy="120" r="3" fill="#e2a63c" fill-opacity="0.18"/>
+  <line x1="1310" y1="0" x2="1310" y2="240" stroke="#e2a63c" stroke-opacity="0.08" stroke-width="1"/>
+  <line x1="1190" y1="120" x2="1430" y2="120" stroke="#e2a63c" stroke-opacity="0.08" stroke-width="1"/>
+  <path d="M 40 260 C 120 220, 160 300, 230 260 S 340 200, 400 250" fill="none" stroke="#7c2d3b" stroke-opacity="0.16" stroke-width="1.4" stroke-linecap="round"/>
+  <g stroke="#7c2d3b" stroke-opacity="0.14" stroke-width="1.2" fill="none" stroke-linecap="round">
+    <path d="M 60 1500 C 90 1440, 90 1380, 60 1320"/>
+    <path d="M 60 1470 C 90 1465, 105 1450, 100 1430"/>
+    <path d="M 55 1420 C 85 1415, 100 1400, 95 1380"/>
+    <path d="M 55 1370 C 85 1365, 100 1350, 95 1330"/>
+    <path d="M 60 1500 C 30 1440, 30 1380, 60 1320"/>
+    <path d="M 60 1470 C 30 1465, 15 1450, 20 1430"/>
+    <path d="M 65 1420 C 35 1415, 20 1400, 25 1380"/>
+    <path d="M 65 1370 C 35 1365, 20 1350, 25 1330"/>
+  </g>
+  <circle cx="1250" cy="720" r="2.5" fill="#e2a63c" fill-opacity="0.16"/>
+  <circle cx="1290" cy="760" r="1.6" fill="#e2a63c" fill-opacity="0.14"/>
+  <circle cx="1220" cy="770" r="1.8" fill="#7c2d3b" fill-opacity="0.16"/>
+  <circle cx="120" cy="900" r="2.2" fill="#7c2d3b" fill-opacity="0.14"/>
+  <circle cx="160" cy="940" r="1.6" fill="#e2a63c" fill-opacity="0.12"/>
+  <g stroke="#e2a63c" stroke-opacity="0.12" stroke-width="1" fill="none">
+    <path d="M 1260 980 C 1300 966, 1340 966, 1360 980 L 1360 1080 C 1340 1066, 1300 1066, 1260 1080 Z"/>
+    <path d="M 1360 980 C 1380 966, 1420 966, 1460 980 L 1460 1080 C 1420 1066, 1380 1066, 1360 1080 Z"/>
+    <line x1="1360" y1="980" x2="1360" y2="1080"/>
+  </g>
+  <line x1="1440" y1="460" x2="1180" y2="200" stroke="#7c2d3b" stroke-opacity="0.10" stroke-width="1"/>
+  <line x1="1440" y1="520" x2="1120" y2="200" stroke="#e2a63c" stroke-opacity="0.08" stroke-width="1"/>
+</svg>
+
+<nav class="spine" id="spine">
+  <button class="spine-mark" onclick="goTo(1)">KPM</button>
+  <button class="spine-toggle" id="spineToggle" aria-label="Toggle navigation">Menu</button>
+  <ol class="spine-links" id="spineLinks">
+    <li><button data-page="1" onclick="goTo(1)"><span class="num">01</span> About</button></li>
+    <li><button data-page="2" onclick="goTo(2)"><span class="num">02</span> Education</button></li>
+    <li><button data-page="2" onclick="goTo(2)"><span class="num">03</span> Experience</button></li>
+    <li><button data-page="3" onclick="goTo(3)"><span class="num">04</span> Activities</button></li>
+    <li><button data-page="3" onclick="goTo(3)"><span class="num">05</span> Skills</button></li>
+    <li><button data-page="4" onclick="goTo(4)"><span class="num">06</span> References</button></li>
+    <li><button data-page="4" onclick="goTo(4)"><span class="num">07</span> Contact</button></li>
+  </ol>
+</nav>
+
+<main>
+  <div class="page-frame">
+
+    <!-- Page 1: About -->
+    <div class="book-page active" id="book-page-1">
+      <div class="page-folio"><span>Khadija Parveen Mashqura</span><span>Page 1 of 4</span></div>
+
+      <div class="section-block">
+        <div class="hero-row">
+          <div>
+            <h1 class="hero-name">Khadija Parveen Mashqura</h1>
+            <blockquote class="hero-quote">Eager to work for the betterment of society and make positive change — through language, teaching, and the words in between.</blockquote>
+          </div>
+          <img class="hero-photo" src="portfolio 2 (copy).jpeg" alt="Khadija Parveen Mashqura">
+        </div>
+      </div>
+
+      <div class="section-block">
+        <div class="section-label">
+          <span class="section-num">01</span>
+          <h2 class="section-title">About</h2>
+        </div>
+        <p class="section-sub">A short introduction and how to reach me.</p>
+        <div class="about-body">
+          <div>
+            <p>I'm a language education graduate from the University of Dhaka, with hands-on experience across teaching, scriptwriting, and client-facing documentation work. I'm organized, adaptable, and committed to continuous improvement, with a particular interest in using education to support positive change in the community.</p>
+            <p>Along the way, I've led operations for my university's debating club, volunteered at national education forums, and worked on translation, documentation, and client communication in a software company setting.</p>
+          </div>
+          <dl class="info-note">
+            <dt>Email</dt>
+            <dd><a href="mailto:khadija.parveen0509@gmail.com">khadija.parveen0509@gmail.com</a></dd>
+            <dt>Phone</dt>
+            <dd>+880 1537-652116</dd>
+            <dt>Address</dt>
+            <dd>297/1, East Rampura, Dhaka-1219</dd>
+          </dl>
+        </div>
+      </div>
+
+      <div class="leaf-nav">
+        <span></span>
+        <button onclick="goTo(2)"><span class="dir">Next</span>Education &amp; Experience →</button>
+      </div>
+    </div>
+
+    <!-- Page 2: Education + Experience -->
+    <div class="book-page" id="book-page-2">
+      <div class="page-folio"><span>Education &amp; Experience</span><span>Page 2 of 4</span></div>
+
+      <div class="section-block">
+        <div class="section-label">
+          <span class="section-num">02</span>
+          <h2 class="section-title">Education</h2>
+        </div>
+        <p class="section-sub">My academic background.</p>
+        <div class="timeline">
+          <div class="timeline-item">
+            <p class="timeline-date">2021 — 2024</p>
+            <p class="timeline-role">B.Ed. in Language Education</p>
+            <p class="timeline-org">Institute of Education and Research, University of Dhaka</p>
+            <p class="timeline-desc">CGPA: 3.43 out of 4.00</p>
+          </div>
+          <div class="timeline-item">
+            <p class="timeline-date">2018 — 2020</p>
+            <p class="timeline-role">HSC, Business Studies</p>
+            <p class="timeline-org">Holy Cross College</p>
+            <p class="timeline-desc">GPA: 5.00 out of 5.00</p>
+          </div>
+          <div class="timeline-item">
+            <p class="timeline-date">2016 — 2018</p>
+            <p class="timeline-role">SSC, Business Studies</p>
+            <p class="timeline-org">Ideal School &amp; College</p>
+            <p class="timeline-desc">GPA: 4.72 out of 5.00</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-block">
+        <div class="section-label">
+          <span class="section-num">03</span>
+          <h2 class="section-title">Work Experience</h2>
+        </div>
+        <p class="section-sub">Roles I've held across teaching, writing, and industry.</p>
+        <div class="timeline">
+          <div class="timeline-item">
+            <p class="timeline-date">Teaching placement</p>
+            <p class="timeline-role">Intern Teacher</p>
+            <p class="timeline-org">Nilkhet High School</p>
+            <p class="timeline-desc">Supported classroom teaching and lesson delivery as part of an early-career teaching placement.</p>
+          </div>
+          <div class="timeline-item">
+            <p class="timeline-date">Part-time</p>
+            <p class="timeline-role">Scriptwriter</p>
+            <p class="timeline-org">10 Minute School</p>
+            <p class="timeline-desc">Wrote scripts for educational content as a part-time contributor.</p>
+            <span class="timeline-badge">Documentation &amp; translation</span>
+          </div>
+          <div class="timeline-item">
+            <p class="timeline-date">Dec 2025 — Jan 2026</p>
+            <p class="timeline-role">Intern</p>
+            <p class="timeline-org">Sinosoft Software Company</p>
+            <p class="timeline-desc">Client service and communication; maintained and reported on client data and internal performance records.</p>
+            <span class="timeline-badge">Client service &amp; reporting</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="leaf-nav">
+        <button onclick="goTo(1)"><span class="dir">Previous</span>← About</button>
+        <button onclick="goTo(3)"><span class="dir">Next</span>Activities &amp; Skills →</button>
+      </div>
+    </div>
+
+    <!-- Page 3: Activities + Skills -->
+    <div class="book-page" id="book-page-3">
+      <div class="page-folio"><span>Activities &amp; Skills</span><span>Page 3 of 4</span></div>
+
+      <div class="section-block">
+        <div class="section-label">
+          <span class="section-num">04</span>
+          <h2 class="section-title">Activities &amp; Participation</h2>
+        </div>
+        <p class="section-sub">Leadership and community involvement alongside my studies.</p>
+        <div class="timeline">
+          <div class="timeline-item">
+            <p class="timeline-date">2023 — 2024</p>
+            <p class="timeline-role">Office Secretary, IER Debating Club (IERDC)</p>
+            <p class="timeline-desc">Managed operations and client relations for the club's activities.</p>
+            <span class="timeline-badge">Operations &amp; client management</span>
+          </div>
+          <div class="timeline-item">
+            <p class="timeline-date">2022 — 2023</p>
+            <p class="timeline-role">Sub-Executive, IER Debating Club (IERDC)</p>
+            <p class="timeline-desc">Contributed to the club's organizing committee.</p>
+          </div>
+          <div class="timeline-item">
+            <p class="timeline-date">2024</p>
+            <p class="timeline-role">Volunteer, GPE KIX Bangladesh National Uptake Forum</p>
+            <p class="timeline-desc">Volunteered at a national education policy forum.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-block">
+        <div class="section-label">
+          <span class="section-num">05</span>
+          <h2 class="section-title">Skills</h2>
+        </div>
+        <p class="section-sub">Languages and tools I work with.</p>
+        <div class="glossary">
+          <div class="glossary-group">
+            <h3>Languages</h3>
+            <div class="gloss-item"><span class="gloss-letter">B</span><span class="gloss-text"><b>Bangla</b><span>Fluent — native language of instruction</span></span></div>
+            <div class="gloss-item"><span class="gloss-letter">E</span><span class="gloss-text"><b>English</b><span>Fluent — writing, teaching, and communication</span></span></div>
+          </div>
+          <div class="glossary-group">
+            <h3>Computer Skills</h3>
+            <div class="gloss-item"><span class="gloss-letter">M</span><span class="gloss-text"><b>MS Office</b><span>Documents, spreadsheets, correspondence</span></span></div>
+            <div class="gloss-item"><span class="gloss-letter">P</span><span class="gloss-text"><b>MS PowerPoint</b><span>Presentations and teaching materials</span></span></div>
+            <div class="gloss-item"><span class="gloss-letter">C</span><span class="gloss-text"><b>Canva</b><span>Visual design for content and slides</span></span></div>
+            <div class="gloss-item"><span class="gloss-letter">T</span><span class="gloss-text"><b>Typing</b><span>Fast and accurate</span></span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="leaf-nav">
+        <button onclick="goTo(2)"><span class="dir">Previous</span>← Experience</button>
+        <button onclick="goTo(4)"><span class="dir">Next</span>References &amp; Contact →</button>
+      </div>
+    </div>
+
+    <!-- Page 4: References + Contact -->
+    <div class="book-page" id="book-page-4">
+      <div class="page-folio"><span>References &amp; Contact</span><span>Page 4 of 4</span></div>
+
+      <div class="section-block">
+        <div class="section-label">
+          <span class="section-num">06</span>
+          <h2 class="section-title">References</h2>
+        </div>
+        <p class="section-sub">Available on request from the following contacts.</p>
+        <div class="ref-list">
+          <div class="ref-item">
+            <p class="ref-name">Dr. Shilpi Rani Shaha</p>
+            <p class="ref-role">Assistant Professor</p>
+            <p class="ref-org">Institute of Education and Research, University of Dhaka</p>
+            <p class="ref-contact">+880 1711-281100</p>
+            <p class="ref-contact">shilpi.saha@du.ac.bd</p>
+          </div>
+          <div class="ref-item">
+            <p class="ref-name">Md. Fazlur Rahman</p>
+            <p class="ref-role">Professor</p>
+            <p class="ref-org">Institute of Education and Research, University of Dhaka</p>
+            <p class="ref-contact">+880 1711-985446</p>
+            <p class="ref-contact">frahman@du.ac.bd</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-block">
+        <div class="section-label">
+          <span class="section-num">07</span>
+          <h2 class="section-title">Contact</h2>
+        </div>
+        <p class="section-sub">Open to teaching, writing, and education-focused opportunities.</p>
+        <p class="contact-lead">Let's connect — I'd love to hear from you.</p>
+        <div class="btn-row">
+          <a href="mailto:khadija.parveen0509@gmail.com" class="btn btn-primary">Email Me</a>
+          <a href="tel:+8801537652116" class="btn btn-secondary">Call</a>
+        </div>
+      </div>
+
+      <div class="leaf-nav">
+        <button onclick="goTo(3)"><span class="dir">Previous</span>← Skills</button>
+        <span></span>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<div class="book-controls">
+  <button id="prevBtn" aria-label="Previous page" onclick="prevPage()">‹</button>
+  <span class="page-indicator" id="pageIndicator">01 / 04</span>
+  <button id="nextBtn" aria-label="Next page" onclick="nextPage()">›</button>
+</div>
+
+<script>
+  const TOTAL_PAGES = 4;
+  let current = 1;
+
+  function pad(n){ return String(n).padStart(2, '0'); }
+
+  function goTo(n){
+    if(n < 1 || n > TOTAL_PAGES) return;
+    document.querySelectorAll('.book-page').forEach(p => p.classList.remove('active'));
+    document.getElementById('book-page-' + n).classList.add('active');
+    document.querySelectorAll('.spine-links button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.spine-links button[data-page="' + n + '"]').forEach(b => b.classList.add('active'));
+    document.getElementById('pageIndicator').textContent = pad(n) + ' / 04';
+    document.getElementById('prevBtn').disabled = n === 1;
+    document.getElementById('nextBtn').disabled = n === TOTAL_PAGES;
+    current = n;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    spineLinks.classList.remove('open');
+  }
+
+  function prevPage(){ goTo(current - 1); }
+  function nextPage(){ goTo(current + 1); }
+
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'ArrowRight') nextPage();
+    if(e.key === 'ArrowLeft') prevPage();
+  });
+
+  const spineToggle = document.getElementById('spineToggle');
+  const spineLinks = document.getElementById('spineLinks');
+  spineToggle.addEventListener('click', () => spineLinks.classList.toggle('open'));
+
+  goTo(1);
+</script>
+
+</body>
+</html>
